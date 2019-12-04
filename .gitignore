@@ -1,0 +1,3 @@
+build/*
+dist/*
+abyss2pano.egg-info/*
