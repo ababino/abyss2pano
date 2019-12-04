@@ -436,9 +436,9 @@ if __name__ == "__main__":
     out_frame_rate = min(frame_rate, out_frame_rate)
 
 
-    out_file_format = os.path.join(dst_folder, "{}_{}.MP4".format(date, '{}'))
-    out_file_sound_format = os.path.join(dst_folder, "{}_{}_r1c1_audio.MP4".format(date, '{}'))
-    out_file_sound_360_format = os.path.join(dst_folder, "{}_{}_r1c1_audio_injected.{}".format(date, '{}', args.ext))
+    out_file_format = os.path.join(dst_folder, "{}_rig{}_{}.MP4".format(date, rig,'{}'))
+    out_file_sound_format = os.path.join(dst_folder, "{}_{}_r{}c1_audio.MP4".format(date, '{}', rig))
+    out_file_sound_360_format = os.path.join(dst_folder, "{}_{}_r{}c1_audio_injected.{}".format(date, '{}', rig, args.ext))
 
     if args.stitch == 'cube':
         full_frame, ii, jj, theta_ii, phi_jj = abys2cube(full_frame_size, frame_shape, 1/3+1/4)
@@ -487,5 +487,5 @@ if __name__ == "__main__":
         save_file = out_file_sound_360_format.format(v_num)
         metadata_utils.inject_metadata(in_file, save_file, metadata, console.append)
         os.remove(out_file_sound_format.format(v_num))
-        os.rename(save_file, out_file)
+        os.rename(save_file, os.path.splitext(out_file)[0] + '.' + args.ext)
 
