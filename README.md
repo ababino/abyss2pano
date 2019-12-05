@@ -47,7 +47,8 @@ With this setting the command will produce a ~1GB file
 abyss2pano.py --campaign Bimini-2019 --date 2019-08-24 --rig 1 --out_frame_rate 30 --stitch cube --ext LRV
 ```
 
-With this setting the command will produce a ~8GB file
+With this setting the command will produce a ~7GB file
 ```
 abyss2pano.py --campaign Bimini-2019 --date 2019-08-24 --rig 1 --out_frame_rate 30 --stitch cube --ext MP4
 ```
+Changing the output frame rate to 120 produces ~8GB files.
