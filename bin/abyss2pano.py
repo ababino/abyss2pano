@@ -23,7 +23,7 @@ from itertools import zip_longest
 import skvideo.io
 import numpy as np
 import skimage
-from spatialmedia import metadata_utils 
+from spatialmedia import metadata_utils
 
 
 #skvideo._FFMPEG_SUPPORTED_DECODERS.append(b'lrv')
@@ -63,10 +63,10 @@ def gopro_file_name_parser(fn):
 def is_cuttingboard(fn, size_th):
     """Decides if fn belongs to the cutting board of if it contains information.
 
-    The criterion to decide if a file is part of a recording is the following. 
-    If a video is part of a recording it has to have a size of aprox 4GB 
-    (maximum size of a file in the FAT system). But, if the file is the last 
-    one of serie then it migh be less than 4GB. So, the criterion is to check 
+    The criterion to decide if a file is part of a recording is the following.
+    If a video is part of a recording it has to have a size of aprox 4GB
+    (maximum size of a file in the FAT system). But, if the file is the last
+    one of serie then it migh be less than 4GB. So, the criterion is to check
     that the file's size is bigger than 4GB or that it is the last one and not
     the first one.
 
@@ -93,19 +93,19 @@ def is_cuttingboard(fn, size_th):
 
 def abyss2sph(full_frame_size, frame_shape, L):
     '''Abyss rig fotage to 360 video that looks like a sphere.
-    
+
     Inputs:
     full_frame_sieze: (h, w, c) final frame size.
     frame_shape: (h, w) gopro videos shape
     L: distance between sensors in pixels
-    
+
     Output:
     full_frame: np.array with the final frame size filled with zeros.
     ii: i coordinates in the input frames.
     jj: j coordinates in the input frames.
     theta_ii: i coordinates in final frame
     phi_jj: j coordinates in final frame
-    
+
     Usage:
     full_frame, ii, jj, theta_ii, phi_jj = abyss2esf((2*resolution_90, 4*resolution_90, 3), (1440, 1920, 3), 4/3)
     full_frame[theta_ii[0], phi_jj[0], :] = frame1[ii[0], jj[0], :]
@@ -117,7 +117,8 @@ def abyss2sph(full_frame_size, frame_shape, L):
     '''
 
     wa = L*np.pi/2
-    sa = 3*wa/4
+    #sa = 3*wa/4
+    sa = L*np.pi/2
     full_frame_size = list(full_frame_size)
     if len(full_frame_size)<3:
         full_frame_size.append(3)
@@ -180,7 +181,7 @@ def abyss2sph(full_frame_size, frame_shape, L):
     v = np.sin(alpha) * y + np.cos(alpha) * z
     u_theta = np.arccos(v)
     v_phi = np.arctan2(u, x)
-    
+
     mask = (u_theta>=np.pi/2 - sa/2) & (u_theta<=np.pi/2 + sa/2) & (v_phi>=np.pi/2-wa/2) & (v_phi<=np.pi/2+wa/2)
     u_norm = (u_theta - (np.pi/2 - sa/2))/sa
     v_norm = (v_phi - (np.pi/2-wa/2))/wa
@@ -198,7 +199,7 @@ def abyss2sph(full_frame_size, frame_shape, L):
     phi_j4 = phi_j[mask]
     i4 = np.round((frame_shape[0] - 1) * (1-u_norm[mask])).astype(int)
     j4 = np.round((frame_shape[1] - 1) * (1-v_norm[mask])).astype(int)
-    
+
     ii = (i1, i2, i3, i4, i5, i6)
     jj = (j1, j2, j3, j4, j5, j6)
     theta_ii = (theta_i1, theta_i2, theta_i3, theta_i4, theta_i5, theta_i6)
@@ -209,19 +210,19 @@ def abyss2sph(full_frame_size, frame_shape, L):
 
 def abys2cube(full_frame_size, frame_shape, L):
     '''Abyss rig fotage to 360 cube video.
-    
+
     Inputs:
     full_frame_sieze: (h, w, c) final frame size.
     frame_shape: (h, w) gopro videos shape
     L: distance between sensors in pixels
-    
+
     Output:
     full_frame: np.array with the final frame size filled with zeros.
     ii: i coordinates in the input frames.
     jj: j coordinates in the input frames.
     theta_ii: i coordinates in final frame
     phi_jj: j coordinates in final frame
-    
+
     Usage:
     resolution_90 = 1440
     # HERO 7 FOV = 94.4 122.6
@@ -248,7 +249,7 @@ def abys2cube(full_frame_size, frame_shape, L):
     phi_j = np.round((full_frame.shape[1]-1)*phi/(2*np.pi)).astype(int)
 
     # Frame 5
-    r = L / (np.sin(theta) * np.cos(phi)) 
+    r = L / (np.sin(theta) * np.cos(phi))
     y = L *  np.tan(phi)
     z = L/ (np.tan(theta) * np.cos(phi))
     alpha = np.pi/4
@@ -266,7 +267,7 @@ def abys2cube(full_frame_size, frame_shape, L):
 
 
     #Frame 2
-    r = L / (np.sin(theta) * np.cos(phi)) 
+    r = L / (np.sin(theta) * np.cos(phi))
     y = L *  np.tan(phi)
     z = L/ (np.tan(theta) * np.cos(phi))
     alpha = -np.pi/4
