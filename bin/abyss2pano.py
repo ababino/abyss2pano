@@ -394,7 +394,10 @@ if __name__ == "__main__":
     parser.add_argument('--ext', default='MP4', choices=['MP4', 'LRV'],
                         help=('extension of the files to stitch. The MP4 files are the full resolution ones, '
                               'and the LRV files are low resolution. Use LRV for faster stitching.'))
-    
+    parser.add_argument('--size-th', default=-1.0, type=float,
+                        help=('Minimum size of the files in GB to be considered a valid recording.'
+                              'If the size is less than the threshold is considered as belonging to the cuttingboard.'))
+
     args = parser.parse_args()
 
     date =  args.date.strftime('%Y-%m-%d')
@@ -417,15 +420,14 @@ if __name__ == "__main__":
 
     cameras = sorted(glob(os.path.join(root, '*[rR]ig{}/*'.format(rig))))
     files_in_cameras = [sorted(glob(os.path.join(camera, '*.'+args.ext))) for camera in cameras]
-    if args.ext == 'MP4':
-        size_th = 3
-    elif args.ext == 'LRV':
-        size_th = 0.1
-    files_in_cameras = [[x for x in fns if is_cuttingboard(x, size_th)] for fns in files_in_cameras]
+    if args.ext == 'MP4' and args.size_th<0:
+        args.size_th = 3
+    elif args.ext == 'LRV' and args.size_th<0:
+        args.size_th = 0.1
+    files_in_cameras = [[x for x in fns if is_cuttingboard(x, args.size_th)] for fns in files_in_cameras]
     files_in_cameras = [sorted(fns, key=lambda x: gopro_file_name_parser(x)[:2]) for fns in files_in_cameras]
     files_per_chunk = [fns for fns in zip(*files_in_cameras)]
     videos_per_chunk = [[VideoReaderWithLRV(fn) for fn in fns] for fns in zip(*files_in_cameras)]
-
     metadata = skvideo.io.ffprobe(files_per_chunk[0][0])['video']
     frame_rate = metadata['@avg_frame_rate'].split('/')
     frame_rate = round(int(frame_rate[0]) / int(frame_rate[1]))
@@ -484,9 +486,8 @@ if __name__ == "__main__":
         subprocess.call(['ffmpeg', '-y', '-i', audio_file, '-i', out_file, '-map', '0:a', '-map', '1:v', '-c', 'copy',  '-shortest',
                                  out_file_sound_format.format(v_num)])
         os.remove(out_file)
-        in_file = out_file_sound_format.format(v_num) 
+        in_file = out_file_sound_format.format(v_num)
         save_file = out_file_sound_360_format.format(v_num)
         metadata_utils.inject_metadata(in_file, save_file, metadata, console.append)
         os.remove(out_file_sound_format.format(v_num))
         os.rename(save_file, os.path.splitext(out_file)[0] + '.' + args.ext)
-
