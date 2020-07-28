@@ -4,16 +4,14 @@ Command line tool to stitch videos from the abyss rig.
 ## Install
 You will need python2.
 
-### Install dependencies
-
+Install dependencies
 ```bash
 pip install git+https://github.com/google/spatial-media.git
 ```
 
-Download or clone this repo. Go to the new folder and run:
-
+Install abyss2pano
 ```bash
-python setup.py install
+pip install git+https://github.com/ababino/abyss2pano.git
 ```
 
 ## Usage
