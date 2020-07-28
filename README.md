@@ -8,6 +8,10 @@ Download or clone this repo. Go to the new folder and run:
 python setup.py install
 ```
 
+## Dependencies
+You will need the [spatial-media](https://github.com/google/spatial-media) package.
+As well as numpy, scikit-video, and scikit-image.
+
 ## Usage
 
 ### Help:
@@ -42,12 +46,12 @@ optional arguments:
 
 ### Example:
 
-With this setting the command will produce a ~1GB file
+With this settings the command will produce a ~1GB file
 ```
 abyss2pano.py --campaign Bimini-2019 --date 2019-08-24 --rig 1 --out_frame_rate 30 --stitch cube --ext LRV
 ```
 
-With this setting the command will produce a ~7GB file
+With this settings the command will produce a ~7GB file
 ```
 abyss2pano.py --campaign Bimini-2019 --date 2019-08-24 --rig 1 --out_frame_rate 30 --stitch cube --ext MP4
 ```
