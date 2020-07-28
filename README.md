@@ -2,21 +2,25 @@
 Command line tool to stitch videos from the abyss rig.
 
 ## Install
+You will need python2.
+
+### Install dependencies
+
+```bash
+pip install git+https://github.com/google/spatial-media.git
+```
+
 Download or clone this repo. Go to the new folder and run:
 
-```
+```bash
 python setup.py install
 ```
-
-## Dependencies
-You will need the [spatial-media](https://github.com/google/spatial-media) package.
-As well as numpy, scikit-video, and scikit-image.
 
 ## Usage
 
 ### Help:
 
-```
+```bash
 abyss2pano.py -h
 
 usage: abyss2pano.py [-h] [--campaign CAMPAIGN] [--date DATE] [--rig {1,2}]
@@ -47,12 +51,12 @@ optional arguments:
 ### Example:
 
 With this settings the command will produce a ~1GB file
-```
+```bash
 abyss2pano.py --campaign Bimini-2019 --date 2019-08-24 --rig 1 --out_frame_rate 30 --stitch cube --ext LRV
 ```
 
 With this settings the command will produce a ~7GB file
-```
+```bash
 abyss2pano.py --campaign Bimini-2019 --date 2019-08-24 --rig 1 --out_frame_rate 30 --stitch cube --ext MP4
 ```
 Changing the output frame rate to 120 produces ~8GB files, and it takes 4010s to process 60s.
